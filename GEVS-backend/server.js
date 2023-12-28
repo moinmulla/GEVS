@@ -212,8 +212,8 @@ app.post('/login',async (req,res)=>{
                     res.cookie('cookieValue',cookieValue,{ 
                         maxAge: 10800000, 
                         // httpOnly: true,
-                        // secure: true,
-                        // sameSite: "None",
+                        secure: true,
+                        sameSite: "None",
                     });   //3hours
                     res.status(201).json({success:true, message:"User Authenticated"});
 
