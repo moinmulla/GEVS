@@ -1,0 +1,100 @@
+.adminDahboardOutter{
+    min-height: calc(100vh - 92px);
+}
+
+.adminDashboard{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 20%;
+    border-radius: 10px;
+    background-color: rgba(249, 241, 241, 0.4);;
+    padding: 20px 20px 40px;
+}
+
+@media screen and (max-width: 850px){
+    .adminDashboard{
+        margin: 2rem 10%;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .adminDashboard{
+        margin: 2rem 5%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .adminDashboard{
+        margin: 1rem 3% 2rem;
+    }
+}
+
+@media screen and (max-width: 370px){
+    .adminDashboard{
+        margin: 1rem 3% 2rem;
+    }
+}
+
+.warning{
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.userFrom{
+    margin: 0.5rem;
+}
+
+.barChart{
+    width: 55vw;
+}
+
+.status{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: rgb(0, 63, 6);
+    font: italic small-caps bold 16px/2 cursive;
+    margin-bottom: 1rem;
+}
+table,tr,td,th {
+    text-align: center;
+}
+
+td{
+    padding:0 1rem
+}
+
+.table{
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 850px){
+    .barChart{
+        width: 75vw;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .barChart{
+        width: 80vw;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .barChart{
+        width: 93vw;
+    }
+}
+
+@media screen and (max-width: 370px){
+    .barChart{
+        width: 95vw;
+    }
+} 
+
+body{
+    background-image: linear-gradient(to right top, #ffbfea, #f2bef1, #e2bdf7, #d0bdfc, #bbbeff, #a7c5ff, #94cbff, #85d1ff, #7cddff, #78e8ff, #7df2fb, #8afbf4);
+}

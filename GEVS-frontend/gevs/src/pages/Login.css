@@ -1,0 +1,149 @@
+.loginOutter{
+    min-height: calc(100vh - 92px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.footerManage{
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.login{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 32%;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px 20px 40px;
+}
+
+@media screen and (max-width: 850px){
+    .login{
+        margin: 2rem 25%;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .login{
+        margin: 2rem 20%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .login{
+        margin: 2rem 15%;
+    }
+}
+
+.loginh1{
+    display:block;
+}
+
+.label {
+    display: inline-block;
+    margin-top: 8px;
+    color: #4f4f4f;
+}
+
+.form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.signupButton {
+    margin-top: 10px;
+}
+
+.login input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px; 
+}
+
+.login button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10%;
+}
+  
+.login button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.error{
+    color: red;
+    font-size: 1;
+}
+
+.name{
+    display: flex;
+}
+
+@media screen and (max-width: 650px){
+    .name{
+        display: block;
+    }
+}
+
+.name .firstName{
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 650px){
+    .name .firstName{
+        margin-right: 0;
+    }
+}
+
+.dropdown{
+    display: block;
+}
+
+.ddlist{
+    height: 40px;
+    width: 100%;
+    
+}
+
+.qr{
+    display: flex;
+}
+
+.qr img{
+    margin: 0.3rem;
+}
+
+.qr img:hover{
+    border: 0.1rem lightgrey solid
+}
+
+.reader{
+    margin-top: 1rem;
+}
+
+.loginBtn{
+    display: flex;
+    justify-content: space-between;
+    margin-top:1rem;
+}
+
+.registAcc{
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+body{
+    background-image: linear-gradient(to right top, #ffbfea, #f2bef1, #e2bdf7, #d0bdfc, #bbbeff, #a7c5ff, #94cbff, #85d1ff, #7cddff, #78e8ff, #7df2fb, #8afbf4);
+}

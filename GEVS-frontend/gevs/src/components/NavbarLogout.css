@@ -1,0 +1,18 @@
+.navOutter{
+    display: flex;
+    justify-content: space-between;
+    margin:0 1rem;
+}
+
+.nav{
+    display: flex;
+    justify-content: center;
+}
+
+.logoutBtn{
+    margin: auto 0;
+}
+
+img{
+    margin: auto 0;
+}

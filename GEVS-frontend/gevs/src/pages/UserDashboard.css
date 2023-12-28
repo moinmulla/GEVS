@@ -1,0 +1,60 @@
+.userDahboardOutter{
+    min-height: calc(100vh - 92px);
+}
+
+.userDashboard{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 30%;
+    border-radius: 10px;
+    background-color: rgba(249, 241, 241, 0.4);;
+    padding: 20px 20px 40px;
+}
+
+@media screen and (max-width: 850px){
+    .userDashboard{
+        margin: 2rem 20%;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .userDashboard{
+        margin: 2rem 15%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .userDashboard{
+        margin: 1rem 4% 2rem;
+    }
+}
+
+@media screen and (max-width: 370px){
+    .userDashboard{
+        margin: 1rem 2% 2rem;
+    }
+}
+
+.warning{
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.userFrom{
+    margin: 0.5rem;
+}
+
+.status{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: rgb(0, 63, 6);
+    font: italic small-caps bold 16px/2 cursive;
+    margin-bottom: 1rem;
+}
+
+body{
+    background-image: linear-gradient(to right top, #ffbfea, #f2bef1, #e2bdf7, #d0bdfc, #bbbeff, #a7c5ff, #94cbff, #85d1ff, #7cddff, #78e8ff, #7df2fb, #8afbf4);
+}

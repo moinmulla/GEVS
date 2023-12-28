@@ -1,0 +1,139 @@
+.registerOutter{
+    min-height: calc(100vh - 92px);
+}
+
+.register{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 32%;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    padding: 20px 20px 30px;
+}
+
+@media screen and (max-width: 850px){
+    .register{
+        margin: 2rem 25%;
+    }
+}
+
+@media screen and (max-width: 650px){
+    .register{
+        margin: 2rem 20%;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .register{
+        margin: 2rem 15%;
+    }
+}
+
+.registerh1{
+    display:block;
+}
+
+.label {
+    display: inline-block;
+    margin-top: 8px;
+    color: #4f4f4f;
+}
+
+.form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.signupButton {
+    margin-top: 10px;
+}
+
+.register input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px; 
+}
+
+.register button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10%;
+}
+  
+.register button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.error{
+    color: red;
+    font-size: 1;
+}
+
+.name{
+    display: flex;
+}
+
+@media screen and (max-width: 650px){
+    .name{
+        display: block;
+    }
+}
+
+.name .firstName{
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 650px){
+    .name .firstName{
+        margin-right: 0;
+    }
+}
+
+.dropdown{
+    display: block;
+}
+
+.ddlist{
+    height: 40px;
+    width: 100%;
+    
+}
+
+.qr{
+    display: flex;
+}
+
+.qr img{
+    margin: 0.3rem;
+}
+
+.qr img:hover{
+    border: 0.1rem lightgrey solid
+}
+
+.reader{
+    margin-top: 1rem;
+}
+
+.signBtn{
+    display: flex;
+    justify-content: space-between;
+}
+
+.existAcc{
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+body{
+    background-image: linear-gradient(to right top, #ffbfea, #f2bef1, #e2bdf7, #d0bdfc, #bbbeff, #a7c5ff, #94cbff, #85d1ff, #7cddff, #78e8ff, #7df2fb, #8afbf4);
+}
