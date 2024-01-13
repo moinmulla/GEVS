@@ -348,10 +348,10 @@ app.get('/gevs/results',(req,res)=>{
                     result1.forEach(item=>{
                         var obj={};
                         obj["party"]=item.party;
-                        obj["seats"]=0;
+                        obj["seat"]=0;
                         result.forEach(item1=>{
                             if(item1.vote_count>0&&item1.party===item.party){
-                                obj["seats"]++;
+                                obj["seat"]++;
                             }
                         })
                         elec_res.push(obj);
@@ -363,7 +363,7 @@ app.get('/gevs/results',(req,res)=>{
                         winner = "Hung Parliament";
                         let flag=0,barrier=result.length/2;
                         elec_res.forEach(item=>{
-                            if(item.seats>barrier){
+                            if(item.seats>=barrier){
                                 winner=item.party
                             }
                         })
