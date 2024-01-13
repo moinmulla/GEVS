@@ -25,7 +25,7 @@ for(let i=0;i<iv.length;i++){
     iv[i]=Math.pow(i+10,2);
 } 
 
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
 app.use(cors({
     origin: [process.env.ORIGIN],
@@ -122,7 +122,6 @@ const authorise = (req, res, next)=>{
 app.post('/register',async (req,res)=>{
     let {email, password, full_name, DOB, constituency, uvccode} = req.body;
     password = await hashPassword(password);
-    console.log(password);
 
     pool.query("SELECT * from voters",(err, result, fields)=>{
         if (err) {
@@ -184,7 +183,7 @@ app.post('/login',async (req,res)=>{
                 if(result[0].admin === 1){
                     role = "admin";
                 }else{
-                    role = "user";
+                    role = "user"
                 }
 
                 var options = { 
@@ -196,6 +195,7 @@ app.post('/login',async (req,res)=>{
                         "client_id":`${clientId}`,
                         "client_secret":`${clientSecret}`,
                         "audience":`${OAuthURL}/api/v2/`,
+                        // "audience":"https://gevs.com",
                         "grant_type":"client_credentials"
                     }
                 };
@@ -212,8 +212,8 @@ app.post('/login',async (req,res)=>{
                     res.cookie('cookieValue',cookieValue,{ 
                         maxAge: 10800000, 
                         // httpOnly: true,
-                        secure: true,
-                        sameSite: "None",
+                        // secure: true,
+                        // sameSite: "Nocane",
                     });   //3hours
                     res.status(201).json({success:true, message:"User Authenticated"});
 
@@ -328,7 +328,7 @@ app.get('/gevs/constituency/:constituencyName',(req,res)=>{
 
 app.get('/gevs/results',(req,res)=>{
 
-    pool.query("SELECT p.party, SUM(c.vote_count)as seat FROM candidate c join party p on c.party_id = p.party_id group by c.party_id",(err,result,fields)=>{
+    pool.query("WITH RankedVotes AS (SELECT constituency_id, party_id, vote_count,ROW_NUMBER() OVER (PARTITION BY constituency_id ORDER BY vote_count DESC) as rn FROM candidate c) SELECT r.constituency_id,con.constituency_name, r.party_id,p.party, r.vote_count FROM RankedVotes r JOIN constituency con ON r.constituency_id = con.constituency_id JOIN party p ON r.party_id = p.party_id WHERE r.rn = 1",(err,result,fields)=>{
         if(err){
             res.status(401).json({message:"Error fetching the data"});
         }
@@ -336,41 +336,49 @@ app.get('/gevs/results',(req,res)=>{
             res.status(401).json({message:`No data found`});
         }
         else{
-            let status,winner;
-            if(election_status == 0){
-                status = "Completed";
-                winner = "Hung Parliament";
-                let count = 0,flag=0;
-                for(let i=0;i<result.length;i++){
-                    count += Number(result[i].seat);
+            pool.query("SELECT party from party",(err1,result1,fileds1)=>{
+                if(err1){
+                    res.status(401).json({message:"Error fetching the data"});
                 }
-                const barrier = count/2;
-                console.log(barrier);
-                for(let i=0;i<result.length;i++){
-                    if(Number(result[i].seat)>barrier){
-                        flag=1;
-                        break;
+                if(result1.length==0){
+                    res.status(401).json({message:`No data found`});
+                }
+                else{
+                    var elec_res=[];
+                    result1.forEach(item=>{
+                        var obj={};
+                        obj["party"]=item.party;
+                        obj["seats"]=0;
+                        result.forEach(item1=>{
+                            if(item1.vote_count>0&&item1.party===item.party){
+                                obj["seats"]++;
+                            }
+                        })
+                        elec_res.push(obj);
+                    })
+
+                    let status,winner;
+                    if(election_status == 0){
+                        status = "Completed";
+                        winner = "Hung Parliament";
+                        let flag=0,barrier=result.length/2;
+                        elec_res.forEach(item=>{
+                            if(item.seats>=barrier){
+                                winner=item.party
+                            }
+                        })
+                    }else{
+                        status = "Pending";
+                        winner = "Pending"; 
                     }
+                    const data = {
+                        status:status,
+                        winner:winner,
+                        seats:elec_res
+                    };
+                    res.status(201).json(data);
                 }
-                let cnt=0;
-                if(flag){
-                    for(let i=0;i<result.length;i++){
-                        if(cnt<Number(result[i].seat)){
-                            cnt=Number(result[i].seat);
-                            winner=result[i].party;
-                        }
-                    }
-                }
-            }else{
-                status = "Pending";
-                winner = "Pending"; 
-            }
-            const data = {
-                status:status,
-                winner:winner,
-                seats:result
-            };
-            res.status(201).json(data);
+            })
         }
     });
 })
@@ -408,7 +416,7 @@ app.get('/userdata', authorise,(req,res)=>{
                         }else{
                             election_status = resultA[0].election_status;
                             if(!election_status){
-                                pool.query("SELECT p.party, SUM(c.vote_count)as seat FROM candidate c join party p on c.party_id = p.party_id group by c.party_id",(err2,result2,fields2)=>{
+                                pool.query("WITH RankedVotes AS (SELECT constituency_id, party_id, vote_count,ROW_NUMBER() OVER (PARTITION BY constituency_id ORDER BY vote_count DESC) as rn FROM candidate c) SELECT r.constituency_id,con.constituency_name, r.party_id,p.party, r.vote_count FROM RankedVotes r JOIN constituency con ON r.constituency_id = con.constituency_id JOIN party p ON r.party_id = p.party_id WHERE r.rn = 1",(err2,result2,fields2)=>{
                                     if(err2){
                                         res.status(401).json({message:"Error fetching the data"});
                                     }
@@ -416,24 +424,19 @@ app.get('/userdata', authorise,(req,res)=>{
                                         res.status(401).json({message:`No data found`});
                                     }
                                     else{
-                                        let winner="Hung Parliament",count = 0,flag=0;
-                                        for(let i=0;i<result2.length;i++){
-                                            count += Number(result2[i].seat);
-                                        }
-                                        const barrier = count/2;
-                                        for(let i=0;i<result2.length;i++){
-                                            if(Number(result2[i].seat)>barrier){
-                                                flag=1;
-                                                break;
-                                            }
-                                        }
-                                        let cnt=0;
-                                        if(flag){
-                                            for(let i=0;i<result2.length;i++){
-                                                if(cnt<Number(result2[i].seat)){
-                                                    cnt=Number(result2[i].seat);
-                                                    winner=result2[i].party;
+                                        let winner="Hung Parliament",temp={},barrier=result2.length/2;
+                                        result2.forEach(item=>{
+                                            if(item.vote_count>0){
+                                                if(temp[item.party]){
+                                                    temp[item.party]++;
+                                                }else{
+                                                    temp[item.party]=1;                                               
                                                 }
+                                            }
+                                        })
+                                        for(var i in temp){
+                                            if(temp[i]>=barrier){
+                                                winner=i;
                                             }
                                         }
                                         result.push(result1);
@@ -519,7 +522,7 @@ app.get('/election-status', authorise,(req,res)=>{
         }else{
             election_status = resultR[0].election_status;
             if(!election_status){
-                pool.query("SELECT p.party, SUM(c.vote_count)as seat FROM candidate c join party p on c.party_id = p.party_id group by c.party_id",(err,result,fields)=>{
+                pool.query("WITH RankedVotes AS (SELECT constituency_id, party_id, vote_count,ROW_NUMBER() OVER (PARTITION BY constituency_id ORDER BY vote_count DESC) as rn FROM candidate c) SELECT r.constituency_id,con.constituency_name, r.party_id,p.party, r.vote_count FROM RankedVotes r JOIN constituency con ON r.constituency_id = con.constituency_id JOIN party p ON r.party_id = p.party_id WHERE r.rn = 1",(err,result,fields)=>{
                     if(err){
                         res.status(401).json({message:"Error fetching the data"});
                     }
@@ -527,24 +530,19 @@ app.get('/election-status', authorise,(req,res)=>{
                         res.status(401).json({message:`No data found`});
                     }
                     else{
-                        let winner="Hung Parliament",count = 0,flag=0;
-                        for(let i=0;i<result.length;i++){
-                            count += Number(result[i].seat);
-                        }
-                        const barrier = count/2;
-                        for(let i=0;i<result.length;i++){
-                            if(Number(result[i].seat)>barrier){
-                                flag=1;
-                                break;
-                            }
-                        }
-                        let cnt=0;
-                        if(flag){
-                            for(let i=0;i<result.length;i++){
-                                if(cnt<Number(result[i].seat)){
-                                    cnt=Number(result[i].seat);
-                                    winner=result[i].party;
+                        let winner="Hung Parliament",temp={},barrier=result.length/2;
+                        result.forEach(item=>{
+                            if(item.vote_count>0){
+                                if(temp[item.party]){
+                                    temp[item.party]++;
+                                }else{
+                                    temp[item.party]=1;                                               
                                 }
+                            }
+                        })
+                        for(var i in temp){
+                            if(temp[i]>=barrier){
+                                winner=i;
                             }
                         }
                         res.status(201).json({election:election_status,winner:winner});
@@ -568,7 +566,7 @@ app.post('/election', authorise,(req,res)=>{
             console.log("No data found");
         }else{
             if(!election_status){
-                pool.query("SELECT p.party, SUM(c.vote_count)as seat FROM candidate c join party p on c.party_id = p.party_id group by c.party_id",(err,result,fields)=>{
+                pool.query("WITH RankedVotes AS (SELECT constituency_id, party_id, vote_count,ROW_NUMBER() OVER (PARTITION BY constituency_id ORDER BY vote_count DESC) as rn FROM candidate c) SELECT r.constituency_id,con.constituency_name, r.party_id,p.party, r.vote_count FROM RankedVotes r JOIN constituency con ON r.constituency_id = con.constituency_id JOIN party p ON r.party_id = p.party_id WHERE r.rn = 1",(err,result,fields)=>{
                     if(err){
                         res.status(401).json({message:"Error fetching the data"});
                     }
@@ -576,24 +574,19 @@ app.post('/election', authorise,(req,res)=>{
                         res.status(401).json({message:`No data found`});
                     }
                     else{
-                        let winner="Hung Parliament",count = 0,flag=0;
-                        for(let i=0;i<result.length;i++){
-                            count += Number(result[i].seat);
-                        }
-                        const barrier = count/2;
-                        for(let i=0;i<result.length;i++){
-                            if(Number(result[i].seat)>barrier){
-                                flag=1;
-                                break;
-                            }
-                        }
-                        let cnt=0;
-                        if(flag){
-                            for(let i=0;i<result.length;i++){
-                                if(cnt<Number(result[i].seat)){
-                                    cnt=Number(result[i].seat);
-                                    winner=result[i].party;
+                        let winner="Hung Parliament",temp={},barrier=result.length/2;
+                        result.forEach(item=>{
+                            if(item.vote_count>0){
+                                if(temp[item.party]){
+                                    temp[item.party]++;
+                                }else{
+                                    temp[item.party]=1;                                               
                                 }
+                            }
+                        })
+                        for(var i in temp){
+                            if(temp[i]>=barrier){
+                                winner=i;
                             }
                         }
                         res.status(201).json({election:election_status,winner:winner});
