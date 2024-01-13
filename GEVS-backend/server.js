@@ -363,7 +363,7 @@ app.get('/gevs/results',(req,res)=>{
                         winner = "Hung Parliament";
                         let flag=0,barrier=result.length/2;
                         elec_res.forEach(item=>{
-                            if(item.seats>=barrier){
+                            if(item.seats>barrier){
                                 winner=item.party
                             }
                         })
