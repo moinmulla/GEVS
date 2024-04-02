@@ -87,7 +87,12 @@ To get started with GEVS, follow these steps:
 
 ![image](https://github.com/moinmulla/GEVS/assets/65023937/3cb3baf3-313e-42cf-9fcb-08b81cbb167d)
 
+
+![image](https://github.com/moinmulla/GEVS/assets/65023937/1dfd6e8c-1eeb-4039-926b-7708a4636f0b)
+
+
 ![image](https://github.com/moinmulla/GEVS/assets/65023937/f6c3a6e5-9714-43dd-aac1-b30368073dcb)
+
 
 ![image](https://github.com/moinmulla/GEVS/assets/65023937/1f575ab4-d72c-4be6-95d5-1b687c351ae4)
 
